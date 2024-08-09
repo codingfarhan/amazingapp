@@ -1,6 +1,5 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThirdwebProviderV4 } from "./ThirdwebProviderv4";
 import { ThirdwebProvider } from "thirdweb/react";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -17,11 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <ThirdwebProviderV4 clientId="80f9353a0c81dd22e5b3d949644592d9">
-          <ThirdwebProvider>{children}</ThirdwebProvider>
-        </ThirdwebProviderV4>
-      </body>
+      <ThirdwebProvider>
+        <body className={inter.className}>{children}</body>
+      </ThirdwebProvider>
     </html>
   );
 }

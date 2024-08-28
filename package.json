@@ -10,13 +10,11 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.51.21",
-    "@thirdweb-dev/react": "^4.9.4",
-    "@thirdweb-dev/sdk": "^4.0.99",
     "ethers": "^5.7.2",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
-    "thirdweb": "^5.43.2"
+    "thirdweb": "^5.48.1"
   },
   "devDependencies": {
     "@types/node": "^20",

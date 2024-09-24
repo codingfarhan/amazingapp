@@ -1,66 +1,34 @@
 "use client";
-import { inAppWallet } from "thirdweb/wallets";
-import { useConnect, useActiveWalletConnectionStatus } from "thirdweb/react";
 import { client } from "@/client";
-import { preAuthenticate } from "thirdweb/wallets/in-app";
-import { useState } from "react";
+import { useEffect } from "react";
+import { ConnectButton } from "thirdweb/react";
+import {
+  useActiveAccount,
+  useActiveWalletConnectionStatus,
+} from "thirdweb/react";
+import { getSocialProfiles } from "thirdweb/social";
 
 export default function Home() {
-  const [email, setEmail] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const [verificationCodeSent, setVerificationCodeSent] = useState(false);
-  const { connect } = useConnect();
+  const account = useActiveAccount();
   const status = useActiveWalletConnectionStatus();
 
-  const sendVerificationCode = async () => {
-    await preAuthenticate({
+  async function getProfiles() {
+    const profiles = await getSocialProfiles({
       client,
-      strategy: "email",
-      email, // ex: user@example.com
+      address: account?.address as string,
     });
-    setVerificationCodeSent(true);
-  };
+    console.log(profiles);
+  }
 
-  const handleLogin = async () => {
-    await connect(async () => {
-      const wallet = inAppWallet();
-      await wallet.connect({
-        client,
-        strategy: "email",
-        email,
-        verificationCode,
-      });
-      return wallet;
-    });
-  };
+  useEffect(() => {
+    if (status == "connected") {
+      getProfiles();
+    }
+  }, [status]);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <input
-        type="email"
-        placeholder="Enter your Email here"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        style={{
-          color: "black",
-        }}
-      />
-      {verificationCodeSent && (
-        <input
-          type="text"
-          placeholder="Enter Verification code"
-          value={verificationCode}
-          onChange={(e) => setVerificationCode(e.target.value)}
-          style={{
-            color: "black",
-          }}
-        />
-      )}
-      {!verificationCodeSent ? (
-        <button onClick={sendVerificationCode}>Send Verification Code.</button>
-      ) : (
-        <button onClick={handleLogin}>Verify</button>
-      )}
-      Wallet Connection Status: {status}
+      <ConnectButton client={client} />
     </main>
   );
 }
